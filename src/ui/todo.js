@@ -7,10 +7,13 @@ export const render = (taskService) => {
   const tasksToRender = taskService.getAllTasks();
   const tasks = tasksToRender.filter((task) => {
     if (listState === "completed") {
+      toggleFilterColor("completed");
       return task.state === "completed";
     } else if (listState === "pending") {
+      toggleFilterColor("pending");
       return task.state === "pending";
     }
+    toggleFilterColor("all");
     return task;
   });
   tasks.forEach((task) => {
@@ -85,3 +88,19 @@ const darkMode = (taskService) => {
   toggleClasses(elements.pendingFilterBtn, "hover:bg-stone-700", isDarkMode);
   toggleClasses(elements.pendingFilterBtn, "hover:bg-gray-300", !isDarkMode);
 };
+
+const toggleFilterColor = (filter) => {
+  const filters = {
+    completed: document.getElementById("completed-filter"),
+    all: document.getElementById("all-tasks-filter"),
+    pending: document.getElementById("pending-filter"),
+  };
+
+  Object.keys(filters).forEach((key) => {
+    const element = filters[key];
+    element.classList.toggle("text-green-500", key === filter);
+    element.classList.toggle("font-bold", key === filter);
+
+  });
+}
+

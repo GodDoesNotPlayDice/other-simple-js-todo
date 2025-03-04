@@ -52,9 +52,10 @@ taskList.addEventListener("click", (event) => {
     const taskElement = target.closest(".task");
     const uuid = taskElement.getAttribute("uuid");
 
-    if (target.classList.contains("fa-clock") || target.classList.contains("fa-check")) {
+    if (!target.classList.contains("fa-pen") && !target.classList.contains("fa-trash")) {
         taskService.toggleTaskState(uuid);
         render(taskService);
+  
     } else if (target.classList.contains("fa-trash")) {
         taskService.deleteTask(uuid);
         render(taskService);
@@ -71,6 +72,7 @@ taskList.addEventListener("click", (event) => {
                 }
                 taskService.editTask(uuid, inputEdit.value);
                 render(taskService);
+                return
             }
         });
 
@@ -81,6 +83,7 @@ taskList.addEventListener("click", (event) => {
             }
             taskService.editTask(uuid, inputEdit.value);
             render(taskService);
+            return
         }
         );
     }
@@ -113,6 +116,11 @@ darkModeButton.addEventListener("click", () => {
 }
 );
 
+Swal.fire({
+    title: "How to use?",
+    text: "You must tap on the task to mark it as completed, tap on the trash icon to delete it, and tap on the pen icon to edit it",
+    icon: "question"
+  });
 
 render(taskService);
 
