@@ -20,20 +20,8 @@ export class TaskService {
     const task = this.taskRepository.findById(uuid);
     if (task.state === "pending") {
       task.state = "completed";
-      iziToast.show({
-        title: "Tasks",
-        message: "Task has been marked as completed",
-        color: "blue",
-        position: "topRight",
-      });
     } else {
       task.state = "pending";
-      iziToast.show({
-        title: "Tasks",
-        message: "Task has been marked as pending",
-        color: "blue",
-        position: "topRight",
-      });
     }
     this.taskRepository.edit(task);
   }
@@ -43,33 +31,34 @@ export class TaskService {
     this.taskRepository.delete(task);
 
     iziToast.show({
-        title: "Tasks",
-        message: "Task has been deleted",
-        color: "green",
-        position: "topRight",
-        });
+      title: "Tasks",
+      message: "Task has been deleted",
+      color: "green",
+      position: "topRight",
+    });
   }
 
   editTask(uuid, newText) {
     const task = this.taskRepository.findById(uuid);
     if (task) {
-        if (task.text === newText) {
-            iziToast.show({
-                title: "Tasks",
-                message: "The new text is the same as the old one",
-                color: "blue",
-                position: "topRight",
-            });
-            return;
-        }
-      task.text = newText;
-      this.taskRepository.edit(task);
+      if (task.text === newText) {
         iziToast.show({
-            title: "Tasks",
-            message: "Task has been edited",
-            color: "green",
-            position: "topRight",
+          title: "Tasks",
+          message: "The text is the same",
+          color: "red",
+          position: "topRight",
         });
+        return;
+      } else {
+        task.text = newText;
+        this.taskRepository.edit(task);
+        iziToast.show({
+          title: "Tasks",
+          message: "Task has been edited",
+          color: "green",
+          position: "topRight",
+        });
+      }
     }
   }
 

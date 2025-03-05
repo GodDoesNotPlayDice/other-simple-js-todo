@@ -7,13 +7,13 @@ export const render = (taskService) => {
   const tasksToRender = taskService.getAllTasks();
   const tasks = tasksToRender.filter((task) => {
     if (listState === "completed") {
-      toggleFilterColor("completed");
+      toggleFilterColor("completed", taskService);
       return task.state === "completed";
     } else if (listState === "pending") {
-      toggleFilterColor("pending");
+      toggleFilterColor("pending", taskService);
       return task.state === "pending";
     }
-    toggleFilterColor("all");
+    toggleFilterColor("all", taskService);
     return task;
   });
   tasks.forEach((task) => {
@@ -21,8 +21,8 @@ export const render = (taskService) => {
     taskList.appendChild(taskElement);
   });
 
-  darkMode(taskService);
 
+  darkMode(taskService);
   const counterFn = counter();
   counterFn(taskService);
 };
@@ -43,6 +43,10 @@ const counter = () => {
   };
 };
 
+const toggleClasses = (element, classes, condition) => {
+  element.classList.toggle(classes, condition);
+};
+
 const darkMode = (taskService) => {
   const elements = {
     body: document.querySelector("body"),
@@ -60,15 +64,11 @@ const darkMode = (taskService) => {
 
   const isDarkMode = taskService.darkModeState();
 
-  const toggleClasses = (element, classes, condition) => {
-    element.classList.toggle(classes, condition);
-  };
-
 
   toggleClasses(elements.body, "bg-stone-800", isDarkMode);
   elements.tasks.forEach((task) => {
     toggleClasses(task, "bg-stone-700", isDarkMode);
-    toggleClasses(task, "hover:bg-stone-900", isDarkMode);
+    toggleClasses(task, "md:hover:bg-stone-900", isDarkMode);
   });
   elements.paragraphs.forEach((p) =>
     toggleClasses(p, "text-stone-100", isDarkMode)
@@ -81,12 +81,13 @@ const darkMode = (taskService) => {
   toggleClasses(elements.darkModeButton, "bg-stone-800", !isDarkMode);
   toggleClasses(elements.darkModeIcon, "fa-sun", isDarkMode);
   toggleClasses(elements.darkModeIcon, "fa-moon", !isDarkMode);
-  toggleClasses(elements.completedFilterBtn, "hover:bg-stone-700", isDarkMode);
-  toggleClasses(elements.completedFilterBtn, "hover:bg-gray-300", !isDarkMode);
-  toggleClasses(elements.allFilterBtn, "hover:bg-stone-700", isDarkMode);
-  toggleClasses(elements.allFilterBtn, "hover:bg-gray-300", !isDarkMode);
-  toggleClasses(elements.pendingFilterBtn, "hover:bg-stone-700", isDarkMode);
-  toggleClasses(elements.pendingFilterBtn, "hover:bg-gray-300", !isDarkMode);
+  toggleClasses(elements.completedFilterBtn, "md:hover:bg-stone-700", isDarkMode);
+  toggleClasses(elements.completedFilterBtn, "md:hover:bg-gray-300", !isDarkMode);
+  toggleClasses(elements.allFilterBtn, "md:hover:bg-stone-700", isDarkMode);
+  toggleClasses(elements.allFilterBtn, "md:hover:bg-gray-300", !isDarkMode);
+  toggleClasses(elements.pendingFilterBtn, "md:hover:bg-stone-700", isDarkMode);
+  toggleClasses(elements.pendingFilterBtn, "md:hover:bg-gray-300", !isDarkMode);
+ 
 };
 
 const toggleFilterColor = (filter) => {
@@ -100,7 +101,6 @@ const toggleFilterColor = (filter) => {
     const element = filters[key];
     element.classList.toggle("text-green-500", key === filter);
     element.classList.toggle("font-bold", key === filter);
-
   });
 }
 
